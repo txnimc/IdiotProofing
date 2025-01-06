@@ -1,4 +1,4 @@
-package toni.examplemod.foundation.config;
+package toni.idiotproofing.foundation.config;
 
 import java.util.EnumMap;
 import java.util.HashSet;
@@ -7,7 +7,7 @@ import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-import toni.examplemod.ExampleMod;
+import toni.idiotproofing.IdiotProofing;
 import toni.lib.config.ConfigBase;
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
 
@@ -104,7 +104,7 @@ public class AllConfigs {
     public static void addEntrySetTranslations(HashSet<String> existing, Set<? extends UnmodifiableConfig.Entry> config, FabricLanguageProvider.TranslationBuilder translationBuilder) {
         for (var entry : config) {
             if (existing.add(entry.getKey()))
-                translationBuilder.add(ExampleMod.ID + ".configuration." + entry.getKey(), entry.getKey());
+                translationBuilder.add(IdiotProofing.ID + ".configuration." + entry.getKey(), entry.getKey());
 
             if (entry.getValue() instanceof com.electronwill.nightconfig.core.AbstractConfig children) {
                 addEntrySetTranslations(existing, children.entrySet(), translationBuilder);

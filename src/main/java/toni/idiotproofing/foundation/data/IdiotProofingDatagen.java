@@ -1,15 +1,15 @@
-package toni.examplemod.foundation.data;
+package toni.idiotproofing.foundation.data;
 
 #if FABRIC
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import toni.examplemod.ExampleMod;
+import toni.idiotproofing.IdiotProofing;
 
-public class ExampleModDatagen  implements DataGeneratorEntrypoint {
+public class IdiotProofingDatagen  implements DataGeneratorEntrypoint {
 
     @Override
     public String getEffectiveModId() {
-        return ExampleMod.ID;
+        return IdiotProofing.ID;
     }
 
     @Override
