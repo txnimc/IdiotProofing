@@ -1,4 +1,4 @@
-package toni.idiotproofing.foundation.config;
+package toni.foolproof.foundation.config;
 
 import toni.lib.config.ConfigBase;
 

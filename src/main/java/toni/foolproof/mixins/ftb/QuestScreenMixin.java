@@ -1,4 +1,4 @@
-//package toni.idiotproofing.mixins.ftb;
+//package toni.foolproof.mixins.ftb;
 //
 //import me.fallenbreath.conditionalmixin.api.annotation.Condition;
 //import me.fallenbreath.conditionalmixin.api.annotation.Restriction;

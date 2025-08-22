@@ -1,11 +1,10 @@
-package toni.idiotproofing;
+package toni.foolproof;
 
 import lombok.SneakyThrows;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.MinecraftServer;
-import toni.idiotproofing.features.VoidGraveReminder;
-import toni.idiotproofing.foundation.IdiotProofingPersistentData;
-import toni.idiotproofing.foundation.config.AllConfigs;
+import toni.foolproof.features.VoidGraveReminder;
+import toni.foolproof.foundation.FoolproofPersistentData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.Logger;
 
@@ -15,11 +14,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.core.Filter;
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.filter.AbstractFilter;
-import org.apache.logging.log4j.core.LifeCycle;
+import toni.foolproof.foundation.config.AllConfigs;
 
 #if FABRIC
     import net.fabricmc.api.ClientModInitializer;
@@ -58,19 +55,19 @@ import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 
 
 #if FORGELIKE
-@Mod("idiotproofing")
+@Mod("foolproof")
 #endif
-public class IdiotProofing #if FABRIC implements ModInitializer, ClientModInitializer #endif
+public class Foolproof #if FABRIC implements ModInitializer, ClientModInitializer #endif
 {
-    public static final String MODNAME = "Idiot-proofing";
-    public static final String ID = "idiotproofing";
+    public static final String MODNAME = "Foolproof";
+    public static final String ID = "foolproof";
     public static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger(MODNAME);
     private static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
     private static final AtomicLong serverStartTime = new AtomicLong(0);
 
-    public static IdiotProofingPersistentData DATA;
+    public static FoolproofPersistentData DATA;
 
-    public IdiotProofing(#if NEO IEventBus modEventBus, ModContainer modContainer #endif) {
+    public Foolproof(#if NEO IEventBus modEventBus, ModContainer modContainer #endif) {
         #if FORGE
         var context = FMLJavaModLoadingContext.get();
         var modEventBus = context.getModEventBus();
@@ -101,9 +98,9 @@ public class IdiotProofing #if FABRIC implements ModInitializer, ClientModInitia
         #if FABRIC
             AllConfigs.register((type, spec) -> {
                 #if AFTER_21_1
-                NeoForgeConfigRegistry.INSTANCE.register(IdiotProofing.ID, type, spec);
+                NeoForgeConfigRegistry.INSTANCE.register(Foolproof.ID, type, spec);
                 #else
-                ForgeConfigRegistry.INSTANCE.register(IdiotProofing.ID, type, spec);
+                ForgeConfigRegistry.INSTANCE.register(Foolproof.ID, type, spec);
                 #endif
             });
         #endif
@@ -140,11 +137,11 @@ public class IdiotProofing #if FABRIC implements ModInitializer, ClientModInitia
 
     #if FABRIC @Override #endif
     public void onInitializeClient() {
-        DATA = IdiotProofingPersistentData.load();
+        DATA = FoolproofPersistentData.load();
 
         #if AFTER_21_1
             #if FABRIC
-            ConfigScreenFactoryRegistry.INSTANCE.register(IdiotProofing.ID, ConfigurationScreen::new);
+            ConfigScreenFactoryRegistry.INSTANCE.register(Foolproof.ID, ConfigurationScreen::new);
             #endif
         #endif
 

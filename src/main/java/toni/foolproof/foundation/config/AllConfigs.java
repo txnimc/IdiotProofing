@@ -1,16 +1,12 @@
-package toni.idiotproofing.foundation.config;
+package toni.foolproof.foundation.config;
 
 import java.util.EnumMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-import toni.idiotproofing.IdiotProofing;
 import toni.lib.config.ConfigBase;
-import com.electronwill.nightconfig.core.UnmodifiableConfig;
-import toni.lib.utils.PlatformUtils;
 
 #if FABRIC
     import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
@@ -106,7 +102,7 @@ public class AllConfigs {
 //    public static void addEntrySetTranslations(HashSet<String> existing, Set<? extends UnmodifiableConfig.Entry> config, FabricLanguageProvider.TranslationBuilder translationBuilder) {
 //        for (var entry : config) {
 //            if (existing.add(entry.getKey()))
-//                translationBuilder.add(IdiotProofing.ID + ".configuration." + entry.getKey(), entry.getKey());
+//                translationBuilder.add(Foolproof.ID + ".configuration." + entry.getKey(), entry.getKey());
 //
 //            if (entry.getValue() instanceof com.electronwill.nightconfig.core.AbstractConfig children) {
 //                addEntrySetTranslations(existing, children.entrySet(), translationBuilder);

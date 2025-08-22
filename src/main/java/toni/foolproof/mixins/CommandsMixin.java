@@ -1,7 +1,6 @@
-package toni.idiotproofing.mixins;
+package toni.foolproof.mixins;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import com.mojang.brigadier.Message;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.exceptions.BuiltInExceptionProvider;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;

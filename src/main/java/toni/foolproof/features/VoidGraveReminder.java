@@ -1,4 +1,4 @@
-package toni.idiotproofing.features;
+package toni.foolproof.features;
 
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.minecraft.network.chat.ChatType;

@@ -1,13 +1,11 @@
-package toni.idiotproofing.mixins;
+package toni.foolproof.mixins;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.MultiLineTextWidget;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.client.gui.layouts.LayoutElement;
-import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.screens.DisconnectedScreen;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.TranslatableContents;
@@ -17,7 +15,10 @@ import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
-import toni.idiotproofing.IdiotProofing;
+import toni.foolproof.Foolproof;
+import net.minecraft.client.gui.layouts.LinearLayout;
+import net.minecraft.client.gui.screens.DisconnectedScreen;
+import net.minecraft.client.gui.screens.Screen;
 
 #if mc >= 211
 import net.minecraft.network.DisconnectionDetails;
@@ -87,7 +88,7 @@ public class DisconnectedScreenMixin {
             }
 
         } catch (Exception e) {
-            IdiotProofing.LOGGER.error(e);
+            Foolproof.LOGGER.error(e);
         }
 
         return instance.addChild(child);

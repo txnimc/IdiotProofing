@@ -1,8 +1,8 @@
 {
   "required": true,
-  "package": "toni.idiotproofing.mixins",
+  "package": "toni.foolproof.mixins",
   "compatibilityLevel": "JAVA_17",
-  "plugin": "toni.idiotproofing.foundation.MixinPlugin",
+  "plugin": "toni.foolproof.foundation.MixinPlugin",
   "minVersion": "0.8",
   "mixins": [
     "CommandDispatcherMixin",

@@ -1,4 +1,4 @@
-package toni.idiotproofing.mixins;
+package toni.foolproof.mixins;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.brigadier.ParseResults;

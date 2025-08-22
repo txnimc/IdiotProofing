@@ -1,4 +1,4 @@
-package toni.idiotproofing.foundation;
+package toni.foolproof.foundation;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
@@ -12,18 +12,18 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
 
-public class IdiotProofingPersistentData {
-    public static final File FILE = new File("idiotproofing.json");
+public class FoolproofPersistentData {
+    public static final File FILE = new File("foolproof.json");
     public static Date timeStarted = new Date();
 
-    public static final Codec<IdiotProofingPersistentData> CODEC = RecordCodecBuilder.create(instance ->
+    public static final Codec<FoolproofPersistentData> CODEC = RecordCodecBuilder.create(instance ->
         instance.group(
             Codec.INT.fieldOf("playtime").forGetter((data) -> data.playtime),
             Codec.STRING.listOf().optionalFieldOf("seenWarnings", new ArrayList<>()).forGetter(data -> data.seenWarnings.stream().toList())
-        ).apply(instance, IdiotProofingPersistentData::new)
+        ).apply(instance, FoolproofPersistentData::new)
     );
 
-    public IdiotProofingPersistentData(Integer playtime, List<String> seenTips) {
+    public FoolproofPersistentData(Integer playtime, List<String> seenTips) {
         this.playtime = playtime;
         this.seenWarnings = new HashSet<>(seenTips);
     }
@@ -39,26 +39,26 @@ public class IdiotProofingPersistentData {
         try (FileWriter writer = new FileWriter(FILE)) {
             JsonElement jsonElement = CODEC.encodeStart(JsonOps.INSTANCE, this)
                 .getOrThrow(#if mc < 211 false, #endif error -> {
-                    throw new RuntimeException("Failed to encode IdiotProofing PersistentData: " + error);
+                    throw new RuntimeException("Failed to encode Foolproof PersistentData: " + error);
                 });
             writer.write(jsonElement.toString());
         } catch (IOException e) {
-            throw new RuntimeException("Failed to save IdiotProofing PersistentData! ", e);
+            throw new RuntimeException("Failed to save Foolproof PersistentData! ", e);
         }
     }
 
-    public static IdiotProofingPersistentData load() {
+    public static FoolproofPersistentData load() {
         if (!FILE.exists())
-            return new IdiotProofingPersistentData(0, new ArrayList<>());
+            return new FoolproofPersistentData(0, new ArrayList<>());
 
         try (FileReader reader = new FileReader(FILE)) {
             JsonElement jsonElement = JsonParser.parseReader(reader);
             return CODEC.parse(JsonOps.INSTANCE, jsonElement)
                 .getOrThrow(#if mc < 211 false, #endif error -> {
-                    throw new RuntimeException("Failed to decode IdiotProofing PersistentData: " + error);
+                    throw new RuntimeException("Failed to decode Foolproof PersistentData: " + error);
                 });
         } catch (IOException e) {
-            throw new RuntimeException("Failed to load IdiotProofing PersistentData! ", e);
+            throw new RuntimeException("Failed to load Foolproof PersistentData! ", e);
         }
     }
 }

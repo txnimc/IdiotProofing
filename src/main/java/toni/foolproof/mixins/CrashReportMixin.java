@@ -1,4 +1,4 @@
-package toni.idiotproofing.mixins;
+package toni.foolproof.mixins;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import io.netty.util.internal.StringUtil;
@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import toni.idiotproofing.foundation.config.AllConfigs;
+import toni.foolproof.foundation.config.AllConfigs;
 
 @Mixin(CrashReport.class)
 public class CrashReportMixin {

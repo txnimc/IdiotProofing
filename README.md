@@ -1,4 +1,4 @@
-# IdiotProofing TODO
+# Foolproof TODO
 
 Below is a list of everything Idiot Proofing changes, including a reason why users were confused before.
 

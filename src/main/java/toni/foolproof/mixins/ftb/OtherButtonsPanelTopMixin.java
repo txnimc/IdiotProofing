@@ -1,4 +1,4 @@
-package toni.idiotproofing.mixins.ftb;
+package toni.foolproof.mixins.ftb;
 
 import dev.ftb.mods.ftblibrary.ui.Widget;
 import dev.ftb.mods.ftbquests.client.gui.quests.OtherButtonsPanelTop;

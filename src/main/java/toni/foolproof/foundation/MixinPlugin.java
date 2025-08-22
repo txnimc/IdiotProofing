@@ -1,4 +1,4 @@
-package toni.idiotproofing.foundation;
+package toni.foolproof.foundation;
 
 import me.fallenbreath.conditionalmixin.api.mixin.RestrictiveMixinConfigPlugin;
 import java.util.List;
