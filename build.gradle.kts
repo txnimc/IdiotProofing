@@ -1,77 +1,56 @@
-import toni.blahaj.*
-import toni.blahaj.api.*
-
-val templateSettings = object : BlahajSettings {
-	// -------------------- Dependencies ---------------------- //
-	override val depsHandler: BlahajDependencyHandler get() = object : BlahajDependencyHandler {
-		override fun addGlobal(mod : ModData, deps: DependencyHandler) {
-
-		}
-
-		override fun addFabric(mod : ModData, deps: DependencyHandler) {
-
-		}
-
-		override fun addForge(mod : ModData, deps: DependencyHandler) {
-
-		}
-
-		override fun addNeo(mod : ModData, deps: DependencyHandler) {
-
-		}
-	}
-
-	// ---------- Curseforge/Modrinth Configuration ----------- //
-	// For configuring the dependecies that will show up on your mod page.
-	override val publishHandler: BlahajPublishDependencyHandler get() = object : BlahajPublishDependencyHandler {
-		override fun addShared(mod : ModData, deps: DependencyContainer) {
-			if (mod.isFabric) {
-				deps.requires("fabric-api")
-			}
-		}
-
-		override fun addCurseForge(mod : ModData, deps: DependencyContainer) {
-
-		}
-
-		override fun addModrinth(mod : ModData, deps: DependencyContainer) {
-
-		}
-	}
-}
+import toni.blahaj.setup.modRuntimeOnly
+import toni.blahaj.setup.runtimeOnly
 
 plugins {
-	`maven-publish`
-	application
-	id("toni.blahaj") version "1.0.9"
-	kotlin("jvm")
-	kotlin("plugin.serialization")
-	id("dev.kikugie.j52j") version "1.0"
-	id("dev.architectury.loom")
-	id("me.modmuss50.mod-publish-plugin")
-	id("systems.manifold.manifold-gradle-plugin")
+	id("toni.blahaj")
 }
 
 blahaj {
-	sc = stonecutter
-	settings = templateSettings
-	init()
-}
+	config { }
+	setup {
+		txnilib("1.0.23")
+		forgeConfig()
+		conditionalMixin()
 
-// Dependencies
-repositories {
-	maven("https://www.cursemaven.com")
-	maven("https://api.modrinth.com/maven")
-	maven("https://thedarkcolour.github.io/KotlinForForge/")
-	maven("https://maven.kikugie.dev/releases")
-	maven("https://maven.txni.dev/releases")
-	maven("https://jitpack.io")
-	maven("https://maven.neoforged.net/releases/")
-	maven("https://maven.terraformersmc.com/releases/")
-	maven("https://raw.githubusercontent.com/Fuzss/modresources/main/maven/")
-	maven("https://maven.parchmentmc.org")
-	maven("https://maven.su5ed.dev/releases")
-	maven("https://maven.su5ed.dev/releases")
-	maven("https://maven.fabricmc.net")
-	maven("https://maven.shedaniel.me/")
+		deps.modImplementation("toni.immersivemessages:${mod.loader}-${mod.mcVersion}:1.0.18") { isTransitive = false }
+		deps.modImplementation("toni.immersivetips:${mod.loader}-${mod.mcVersion}:1.0.1") { isTransitive = false }
+
+
+		when (mod.projectName) {
+			"1.21.1-fabric" -> {
+				deps.modImplementation("curse.maven:ftb-quests-fabric-438496:5882271")
+				deps.modImplementation("curse.maven:architectury-api-419699:5786326")
+				deps.modImplementation("curse.maven:ftb-library-fabric-438495:6874537")
+				deps.modImplementation("curse.maven:ftb-teams-fabric-438497:5882218")
+				deps.modRuntimeOnly("teamreborn:energy:4.1.0")
+			}
+			"1.20.1-fabric" -> {
+				deps.modImplementation("curse.maven:item-filters-309674:4838265")
+				deps.modImplementation("curse.maven:ftb-quests-fabric-438496:5543954")
+				deps.modImplementation("curse.maven:ftb-library-fabric-438495:5567590")
+				deps.modImplementation("curse.maven:architectury-api-419699:5137936")
+				deps.modImplementation("curse.maven:ftb-teams-fabric-438497:5267188")
+				deps.modRuntimeOnly("teamreborn:energy:3.0.0")
+			}
+
+
+			"1.21.1-neoforge" -> {
+				deps.modImplementation("curse.maven:architectury-api-419699:5786327")
+				deps.modImplementation("curse.maven:ftb-quests-forge-289412:6874989")
+				deps.modImplementation("curse.maven:ftb-library-forge-404465:6874538")
+				deps.modImplementation("curse.maven:ftb-teams-forge-404468:5882217")
+			}
+			"1.20.1-forge" -> {
+				deps.modImplementation("curse.maven:ftb-quests-forge-289412:6829212")
+				deps.modImplementation("curse.maven:item-filters-309674:4838266")
+				deps.modImplementation("curse.maven:ftb-library-forge-404465:6807424")
+
+				deps.modRuntimeOnly("curse.maven:architectury-api-419699:5137938")
+				deps.modRuntimeOnly("curse.maven:ftb-teams-forge-404468:5267190")
+
+				deps.compileOnly(deps.annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1")!!)
+				deps.implementation(deps.include("io.github.llamalad7:mixinextras-forge:0.4.1")!!)
+			}
+		}
+	}
 }

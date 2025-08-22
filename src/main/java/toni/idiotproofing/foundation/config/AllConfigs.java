@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 import toni.idiotproofing.IdiotProofing;
 import toni.lib.config.ConfigBase;
 import com.electronwill.nightconfig.core.UnmodifiableConfig;
+import toni.lib.utils.PlatformUtils;
 
 #if FABRIC
     import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
@@ -49,21 +50,21 @@ public class AllConfigs {
 
     private static final Map<ModConfig.Type, ConfigBase> CONFIGS = new EnumMap<>(ModConfig.Type.class);
 
-    private static CClient client;
+    //private static CClient client;
     private static CCommon common;
-    private static CServer server;
+   // private static CServer server;
 
-    public static CClient client() {
-        return client;
-    }
+    //public static CClient client() {
+     //   return client;
+    //}
 
     public static CCommon common() {
         return common;
     }
 
-    public static CServer server() {
-        return server;
-    }
+//public static CServer server() {
+   //     return server;
+   // }
 
     public static ConfigBase byType(ModConfig.Type type) {
         return CONFIGS.get(type);
@@ -83,35 +84,36 @@ public class AllConfigs {
     }
 
     public static void register(BiConsumer<ModConfig.Type, #if after_21_1 ModConfigSpec #else ForgeConfigSpec #endif> registration) {
-        client = register(CClient::new, ModConfig.Type.CLIENT);
+//        if (!PlatformUtils.isDedicatedServer())
+//            client = register(CClient::new, ModConfig.Type.CLIENT);
+
         common = register(CCommon::new, ModConfig.Type.COMMON);
-        server = register(CServer::new, ModConfig.Type.SERVER);
 
         for (Entry<ModConfig.Type, ConfigBase> pair : CONFIGS.entrySet())
             registration.accept(pair.getKey(), pair.getValue().specification);
     }
 
-    #if FABRIC 
-    public static void generateTranslations(FabricLanguageProvider.TranslationBuilder translationBuilder) {
-        var existing = new HashSet<String>();
-
-        for (Entry<ModConfig.Type, ConfigBase> pair : CONFIGS.entrySet())
-        {
-            addEntrySetTranslations(existing, pair.getValue().specification.getSpec().entrySet(), translationBuilder);
-        }
-    }
-
-    public static void addEntrySetTranslations(HashSet<String> existing, Set<? extends UnmodifiableConfig.Entry> config, FabricLanguageProvider.TranslationBuilder translationBuilder) {
-        for (var entry : config) {
-            if (existing.add(entry.getKey()))
-                translationBuilder.add(IdiotProofing.ID + ".configuration." + entry.getKey(), entry.getKey());
-
-            if (entry.getValue() instanceof com.electronwill.nightconfig.core.AbstractConfig children) {
-                addEntrySetTranslations(existing, children.entrySet(), translationBuilder);
-            }
-        }
-    }
-    #endif
+//    #if FABRIC
+//    public static void generateTranslations(FabricLanguageProvider.TranslationBuilder translationBuilder) {
+//        var existing = new HashSet<String>();
+//
+//        for (Entry<ModConfig.Type, ConfigBase> pair : CONFIGS.entrySet())
+//        {
+//            addEntrySetTranslations(existing, pair.getValue().specification.getSpec().entrySet(), translationBuilder);
+//        }
+//    }
+//
+//    public static void addEntrySetTranslations(HashSet<String> existing, Set<? extends UnmodifiableConfig.Entry> config, FabricLanguageProvider.TranslationBuilder translationBuilder) {
+//        for (var entry : config) {
+//            if (existing.add(entry.getKey()))
+//                translationBuilder.add(IdiotProofing.ID + ".configuration." + entry.getKey(), entry.getKey());
+//
+//            if (entry.getValue() instanceof com.electronwill.nightconfig.core.AbstractConfig children) {
+//                addEntrySetTranslations(existing, children.entrySet(), translationBuilder);
+//            }
+//        }
+//    }
+//    #endif
 
     #if FORGELIKE
     @SubscribeEvent

@@ -1,9 +1,25 @@
 package toni.idiotproofing;
 
+import lombok.SneakyThrows;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.minecraft.server.MinecraftServer;
+import toni.idiotproofing.features.VoidGraveReminder;
+import toni.idiotproofing.foundation.IdiotProofingPersistentData;
 import toni.idiotproofing.foundation.config.AllConfigs;
 import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.Logger;
 
+import java.lang.reflect.Field;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.Filter;
+import org.apache.logging.log4j.core.LogEvent;
+import org.apache.logging.log4j.core.filter.AbstractFilter;
+import org.apache.logging.log4j.core.LifeCycle;
 
 #if FABRIC
     import net.fabricmc.api.ClientModInitializer;
@@ -46,9 +62,13 @@ import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 #endif
 public class IdiotProofing #if FABRIC implements ModInitializer, ClientModInitializer #endif
 {
-    public static final String MODNAME = "Idiot Proofing";
+    public static final String MODNAME = "Idiot-proofing";
     public static final String ID = "idiotproofing";
-    public static final Logger LOGGER = LogManager.getLogger(MODNAME);
+    public static final org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger(MODNAME);
+    private static final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+    private static final AtomicLong serverStartTime = new AtomicLong(0);
+
+    public static IdiotProofingPersistentData DATA;
 
     public IdiotProofing(#if NEO IEventBus modEventBus, ModContainer modContainer #endif) {
         #if FORGE
@@ -65,14 +85,18 @@ public class IdiotProofing #if FABRIC implements ModInitializer, ClientModInitia
             ModLoadingContext.get().registerConfig(type, spec);
             #elif NEO
             modContainer.registerConfig(type, spec);
-            modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
             #endif
         });
         #endif
     }
 
+    public static boolean hasSeenWarning(String warning) {
+        return DATA.seenWarnings.contains(warning);
+    }
+
 
     #if FABRIC @Override #endif
+    @SneakyThrows
     public void onInitialize() {
         #if FABRIC
             AllConfigs.register((type, spec) -> {
@@ -83,15 +107,55 @@ public class IdiotProofing #if FABRIC implements ModInitializer, ClientModInitia
                 #endif
             });
         #endif
+
+        VoidGraveReminder.init();
+        ServerLifecycleEvents.SERVER_STARTED.register(this::onServerStarted);
+        ServerLifecycleEvents.SERVER_STOPPING.register((server) -> {
+            DATA.save();
+        });
+
+        try {
+            Field log4jField = org.apache.logging.slf4j.Log4jLogger.class.getDeclaredField("logger");
+            log4jField.setAccessible(true);
+            Logger log4jLogger = (Logger) log4jField.get(MinecraftServer.LOGGER);
+
+            log4jLogger.addFilter(new AbstractFilter() {
+                @Override
+                public Result filter(LogEvent event) {
+                    String msg = event.getMessage().getFormattedMessage();
+                    if (msg != null && msg.contains("Can't keep up!")) {
+                        long elapsed = System.currentTimeMillis() - serverStartTime.get();
+                        if (serverStartTime.get() == 0 || elapsed < 120_000) {
+                            return Result.DENY;
+                        }
+                    }
+                    return Result.NEUTRAL;
+                }
+            });
+        } catch (Exception e) {
+            LOGGER.warn("Could not install log filter:");
+            LOGGER.warn(e.getMessage());
+        }
     }
 
     #if FABRIC @Override #endif
     public void onInitializeClient() {
+        DATA = IdiotProofingPersistentData.load();
+
         #if AFTER_21_1
             #if FABRIC
             ConfigScreenFactoryRegistry.INSTANCE.register(IdiotProofing.ID, ConfigurationScreen::new);
             #endif
         #endif
+
+        ClientEvents.init();
+    }
+
+    private void onServerStarted(MinecraftServer server) {
+        serverStartTime.set(System.currentTimeMillis());
+        scheduler.schedule(() -> {
+            System.out.println("[SERVER] The server is fully started and ready to join!");
+        }, 5, TimeUnit.SECONDS);
     }
 
     // Forg event stubs to call the Fabric initialize methods, and set up cloth config screen
