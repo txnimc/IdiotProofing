@@ -1,2 +1,1 @@
-## Changelog
-- Initial release
+Fix issue with commands not working on Fabric
